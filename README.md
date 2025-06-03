@@ -6,7 +6,7 @@ Projekt zawiera również element interpretowalności modelu przy użyciu techni
 
 
 
-
+```
 bread_classifier/
 │
 ├── data/
@@ -15,7 +15,7 @@ bread_classifier/
 │   └── test/
 │
 ├── models/
-│   └── cnn_model.pt
+│   └── cnn_model.pth
 │
 ├── notebooks/
 │   └── model_training.ipynb
@@ -30,3 +30,4 @@ bread_classifier/
 │
 ├── README.md
 └── requirements.txt
+```
