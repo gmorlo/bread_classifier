@@ -16,13 +16,17 @@ bread_classifier/
 │
 ├── models/
 │   └── cnn_model.pth
+│   └── model_builder.py
 │
 ├── notebooks/
 │   └── model_training.ipynb
 │   └── explainability.ipynb
+│   └── dataset_creation.ipynb
 │
 ├── utils/
 │   └── dataloader.py
+│   └── save_load.py
+│   └── training.py
 │   └── transforms.py
 │
 ├── app/
