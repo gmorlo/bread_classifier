@@ -10,9 +10,10 @@ Projekt zawiera również element interpretowalności modelu przy użyciu techni
 bread_classifier/
 │
 ├── data/
-│   ├── train/
-│   ├── val/
-│   └── test/
+│   └── dataset_1/
+│       ├── train/
+│       ├── val/
+│       └── test/
 │
 ├── models/
 │   └── cnn_model.pth
