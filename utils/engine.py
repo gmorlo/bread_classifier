@@ -23,12 +23,12 @@ def train_step(model: torch.nn.Module,
         A tuple containing the average training loss and accuracy for the epoch.
     """
     
-    model.train() # set model to training mode
-    train_loss, train_acc = 0, 0 # setup train loss and accuracy variables
+    model.train() # Set model to training mode
+    train_loss, train_acc = 0, 0 # Setup train loss and accuracy variables
 
-    # loop through dataloader batches
-    for batch, (X, y) in enumerate(dataloader): #without tqdm - it will be implemented in the main training loop
-        # send data to target device
+    # Loop through dataloader batches
+    for batch, (X, y) in enumerate(dataloader): # Without tqdm - it will be implemented in the main training loop
+        # Send data to target device
         X, y = X.to(device), y.to(device)
 
         # 1. Forward pass
@@ -75,14 +75,14 @@ def test_step(model: torch.nn.Module,
         A tuple containing testing loss and testing accuracy for the epoch.
     """
 
-    model.eval() # set model to evaluation mode
-    test_loss, test_acc = 0, 0 # setup test loss and accuracy variables
+    model.eval() # Set model to evaluation mode
+    test_loss, test_acc = 0, 0 # Setup test loss and accuracy variables
 
-    # turn on inference mode to speed up testing
+    # Turn on inference mode to speed up testing
     with torch.inference_mode(): 
-        # loop through dataloader batches
+        # Loop through dataloader batches
         for batch, (X, y) in enumerate(dataloader):
-            # send data to target device
+            # Send data to target device
             X, y = X.to(device), y.to(device)
 
             # 1. Forward pass
@@ -111,6 +111,65 @@ def train(model: torch.nn.Module,
           device: torch.device) -> Dict[str, List[float]]:
     """Trains and tests a PyTorch model.
 
+    Passes the model through training and testing steps for a number of epochs.
+
+    Calculates and returns training and testing loss and accuracy for each epoch.
+
+    Args:
+        model: A PyTorch model to train and test.
+        train_dataloader: A PyTorch DataLoader containing training data.
+        test_dataloader: A PyTorch DataLoader containing testing data.
+        loss_fn: A PyTorch loss function to calculate the loss.
+        optimizer: A PyTorch optimizer to update the model's parameters and to help minimize the loss function.
+        epochs: An integer for number of epochs to train the model for.
+        device: A PyTorch device (e.g. "cuda" or "cpu") to compute on.
+    
+    Returns:
+        A dictionary containing lists of training and testing loss and accuracy for each epoch.
+        
+        In the form: {train_loss: [...],
+              train_acc: [...],
+              test_loss: [...],
+              test_acc: [...]}
     """
 
-    pass # TODO: Implement the main training loop with tqdm progress bar
+    # Create empty dictionary to store training and testing metrics
+    results_history = {
+        "train_loss": [],
+        "train_acc": [],
+        "test_loss": [],
+        "test_acc": []
+    }
+
+    # Make sure model is on target device
+    model.to(device)
+
+    # Loop through training and testing steps for a number of epochs
+    for epoch in tqdm(range(epochs), desc="Training Epochs"):
+        # Train step
+        train_loss, train_acc = train_step(model=model,
+                                           dataloader=train_dataloader,
+                                           loss_fn=loss_fn,
+                                           optimizer=optimizer,
+                                           device=device)
+        # Test step
+        test_loss, test_acc = test_step(model=model,
+                                        dataloader=test_dataloader,
+                                        loss_fn=loss_fn,
+                                        device=device)
+        
+        # Print out results
+        print(f"Epoch: {epoch+1}/{epochs} | "
+                f"Train Loss: {train_loss:.4f} | "
+                f"Train Acc: {train_acc:.4f} | "
+                f"Test Loss: {test_loss:.4f} | "
+                f"Test Acc: {test_acc:.4f} |")
+        
+        # Append results to history
+        results_history["train_loss"].append(train_loss)
+        results_history["train_acc"].append(train_acc)
+        results_history["test_loss"].append(test_loss)
+        results_history["test_acc"].append(test_acc)
+
+    # Return results history
+    return results_history
