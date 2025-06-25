@@ -30,6 +30,7 @@ bread_classifier/
 │   └── engine.py
 │   └── training.py
 │   └── transforms.py
+│   └── plots.py
 │
 ├── app/
 │   └── streamlit_app.py
