@@ -1,9 +1,6 @@
 __pycache__/
-
 data/*
 !data/zip/
 !data/zip/**
-
-models/*.pth
-
+*.pth
 .vscode
