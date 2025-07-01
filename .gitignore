@@ -4,7 +4,6 @@ data/*
 !data/zip/
 !data/zip/**
 
-models/*
-!models/model_builder.py
+models/*.pth
 
 .vscode
