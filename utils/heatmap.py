@@ -15,6 +15,16 @@ def load_image(image_path: str):
     return img
 
 def get_class_label(preds: torch.Tensor) -> int:
+    """Returns the class label with the highest score from model predictions."""
+    if not isinstance(preds, torch.Tensor):
+        raise TypeError("Predictions must be a torch.Tensor.")
     class_idx = torch.argmax(preds, dim=1).item()
     return class_idx
+
+def get_conv_layer(model: torch.nn.Module, conv_layer_name: str) -> torch.nn.Module:
+    """Extracts convolutional layer from a model."""
+    for name, layer in model.named_modules():
+        if name == conv_layer_name:
+            return layer
+    raise ValueError(f"Convolutional layer '{conv_layer_name}' not found in the model.")
 
