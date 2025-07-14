@@ -23,20 +23,20 @@ The model is trained from scratch using a custom TinyVGG architecture and prepar
 ```bash
 ├── app/ # (To be used for deployment / HF Space)
 ├── data/ # Datasets
-│ ├── dataset_1/
-│ └── zip/data.zip
+│   ├── dataset_1/
+│   └── zip/data.zip
 ├── models/
-│ ├── model_builder.py # TinyVGG model definition
-│ └── tiny_vgg_model_1.pth # Trained weights
+│   ├── model_builder.py # TinyVGG model definition
+│   └── tiny_vgg_model_1.pth # Trained weights
 ├── notebooks/
-│ ├── dataset_creation.ipynb # Data organization
+│   └── dataset_creation.ipynb # Data organization
 ├── utils/
-│ ├── dataloader.py # Dataloader creation
-│ ├── engine.py # Training/validation loop
-│ ├── heatmap.py # Grad-CAM generation - TODO
-│ ├── plots.py # Metric plotting
-│ ├── save_load.py # Save/load utils
-│ └── transforms.py # Image transforms - TODO
+│   ├── dataloader.py # Dataloader creation
+│   ├── engine.py # Training/validation loop
+│   ├── heatmap.py # Grad-CAM generation - TODO
+│   ├── plots.py # Metric plotting
+│   ├── save_load.py # Save/load utils
+│   └── transforms.py # Image transforms - TODO
 ├── requirements.txt
 ├── README.md
 ├── tiny_vgg_model_training.ipynb # Model training
