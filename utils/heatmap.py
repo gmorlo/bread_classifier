@@ -70,3 +70,14 @@ def compute_heatmap(model: torch.nn.Module,
 
     return heatmap
 
+def overlay_heatmap(image_path: str, 
+                    heatmap: np.ndarray, 
+                    alpha: float = 0.5) -> np.ndarray:
+    """Overlays the heatmap on the original image."""
+    original_image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    heatmap_resized = cv2.resize(heatmap, (original_image.shape[1], original_image.shape[0]))
+    heatmap_colored = cv2.applyColorMap(np.uint8(255 * heatmap_resized), cv2.COLORMAP_JET)
+
+    overlayed_image = cv2.addWeighted(original_image, alpha, heatmap_colored, 1 - alpha, 0)
+
+    return overlayed_image
