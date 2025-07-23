@@ -33,28 +33,40 @@ def get_conv_layer(model: torch.nn.Module,
     raise ValueError(f"Convolutional layer '{conv_layer_name}' not found in the model.")
 
 def compute_heatmap(model: torch.nn.Module, 
-                    image: torch.Tensor, 
+                    image_tensor: torch.Tensor, 
+                    class_index: int,
                     conv_layer_name: str) -> np.ndarray:
     """Computes a heatmap for the input image using the specified convolutional layer."""
 
     model.eval()
     conv_layer = get_conv_layer(model, conv_layer_name)
     
-    # Forward pass
-    with torch.no_grad():
-        features = conv_layer(image)
-        preds = model(image)
+    activation = None
 
-    # Get class index
-    class_idx = get_class_label(preds)
+    def get_activation_hook(module, input, output):
+        nonlocal activation
+        activation = output
 
-    # Get gradients
-    features.register_hook(lambda grad: grad)
-    preds[0, class_idx].backward()
+    hook = conv_layer.register_forward_hook(get_activation_hook)
 
-    # Compute heatmap
-    heatmap = features.grad.data.abs().mean(dim=1).squeeze().cpu().numpy()
+    image_tensor.requires_grad_(True)
+    preds = model(image_tensor)
+    loss = preds[:, class_index]
+    model.zero_grad()
+    loss.backward()
+
+    grads = image_tensor.grad.cpu().numpy()
+    pooled_grads = np.mean(grads, axis=(0, 2, 3))
+
+    hook.remove()
+
+    activation = activation.detach().cpu().numpy()[0]
+    for i in range(len(pooled_grads.shape[0])):
+        activation[i, ...] *= pooled_grads[i]
+
+    heatmap = np.mean(activation, axis=0)
     heatmap = np.maximum(heatmap, 0)
     heatmap /= np.max(heatmap)
-    
+
     return heatmap
+
