@@ -10,11 +10,8 @@ from PIL import Image
 def load_image(image_path: str):
     """Loads an image from a file path and preprocesses it for model input."""
 
-    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    img = cv2.resize(img, (224, 224))
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    # Convert to PIL Image to use .convert("RGB")
-    img = Image.fromarray(img).convert("RGB")
+    img = Image.open(image_path).convert("RGB")
+    img = transforms.Resize((64, 64))(img)
     img = transforms.ToTensor()(img)
     img = img.unsqueeze(0)
     return img
